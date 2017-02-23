@@ -1,2 +1,46 @@
 ---
-# tasks file for django_app_deploy
+- name: set deploy directory permissions
+  # TODO: Mode config
+  file: path="{{ deploy_directory }}" owner="{{ deploy_user }}" mode=0750 state=directory
+
+- name: create deployment structure
+  deploy_helper: path="{{ deploy_directory }}" state=present
+
+- name: clone repository
+  # TODO: Add version
+  git: repo="{{ deploy_repository }}" dest="{{ deploy_helper.new_release_path }}" force=yes
+
+- file: path="{{ deploy_helper.new_release_path }}/{{ deploy_helper.unfinished_filename }}" state=touch
+
+- name: install Python requirements into virtualenv
+  # TODO: Fix deploy_create_virtualenv option
+  pip:
+      chdir: "{{ deploy_helper.new_release_path }}"
+      requirements: "requirements.txt"
+      virtualenv: "{{ deploy_helper.new_release_path }}/env"
+      virtualenv_site_packages: yes
+
+- name: execute Django checks
+  # TODO: Fail on warnings.
+  command: ./env/bin/python manage.py check --no-color
+  args:
+      chdir: "{{ deploy_helper.new_release_path }}"
+
+- name: execute Django tests
+  command: ./env/bin/python manage.py test --no-color --no-input
+  args:
+      chdir: "{{ deploy_helper.new_release_path }}"
+
+- name: execute Django database migrations
+  # TODO: Check for migrations first.
+  command: ./env/bin/python manage.py migrate --no-color --no-input
+  args:
+      chdir: "{{ deploy_helper.new_release_path }}"
+
+- name: set release to current
+  deploy_helper: path="{{ deploy_directory }}" release="{{ deploy_helper.new_release }}" state=finalize
+  
+#	11) Restart Apache, if needed
+#		a. /usr/sbin/apachectl -t
+#		b. /usr/sbin/apachectl graceful
+#
