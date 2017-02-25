@@ -1,6 +1,6 @@
 ---
 # User must be set, or it gets deployed as current user.
-deploy_user: "{{ user | default(ansible_user) }}"
+deploy_user: "{{ user | default(ansible_user_id) }}"
 deploy_repository: "{{ repository | mandatory }}"
 deploy_directory: "{{ directory | mandatory }}"
 deploy_create_virtualenv: "{{ create_virtualenv | default(True) }}"
