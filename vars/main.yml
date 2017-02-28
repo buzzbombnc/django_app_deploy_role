@@ -1,4 +1,8 @@
 ---
+# Repository is built by current user and changed to user, group, and/or mode if set.
+deploy_user: "{{ user | default(omit) }}"
+deploy_group: "{{ group | default(omit) }}"
+deploy_mode: "{{ mode | default('0700') }}"
 # Git repository to use.
 deploy_repository: "{{ repository | mandatory }}"
 # Git reference to use.
