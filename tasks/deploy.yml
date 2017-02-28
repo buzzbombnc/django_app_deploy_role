@@ -7,8 +7,7 @@
   deploy_helper: path="{{ deploy_directory }}" state=present
 
 - name: clone repository
-  # TODO: Add version
-  git: repo="{{ deploy_repository }}" dest="{{ deploy_helper.new_release_path }}"
+  git: repo="{{ deploy_repository }}" dest="{{ deploy_helper.new_release_path }}" version="{{ deploy_reference }}"
 
 - file: path="{{ deploy_helper.new_release_path }}/{{ deploy_helper.unfinished_filename }}" state=touch
 
