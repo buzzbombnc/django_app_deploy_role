@@ -1,8 +1,4 @@
 ---
-- name: set deploy directory permissions
-  # TODO: Mode config
-  file: path="{{ deploy_directory }}" mode=0750 state=directory
-
 - name: create deployment structure
   deploy_helper: path="{{ deploy_directory }}" state=present
 
@@ -11,10 +7,10 @@
 
 - file: path="{{ deploy_helper.new_release_path }}/{{ deploy_helper.unfinished_filename }}" state=touch
 
-- name: install Python requirements into virtualenv
-  pip:
-      chdir: "{{ deploy_helper.new_release_path }}"
-      requirements: "requirements.txt"
-      virtualenv: "{{ deploy_helper.new_release_path }}/env"
-      virtualenv_site_packages: yes
+#- name: install Python requirements into virtualenv
+#  pip:
+#      chdir: "{{ deploy_helper.new_release_path }}"
+#      requirements: "requirements.txt"
+#      virtualenv: "{{ deploy_helper.new_release_path }}/env"
+#      virtualenv_site_packages: yes
 
