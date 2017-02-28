@@ -2,5 +2,5 @@
 # Git repository to use.
 deploy_repository: "{{ repository | mandatory }}"
 # Git reference to use.
-deploy_reference: "{{ reference | default(HEAD) }}"
+deploy_reference: "{{ reference | default('HEAD') }}"
 deploy_directory: "{{ directory | mandatory }}"
