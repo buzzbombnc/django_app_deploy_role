@@ -3,21 +3,33 @@ django_app_deploy_role
 
 Role that deploys a Django application from Git repository onto a server.
 
+Tasks:
+1. Deploy repository to server.
+2. Create virtualenv and requirements via `requirements.txt` file.
+3. Validate the Django application by using the `manage.py` script with the `check`, `test`, and `migrate` arguments.
+
 Requirements
 ------------
 
-* Python virtualenv installed.
+* Python `virtualenv` and `pip` installed.
+* The repository must contain a Django project!
 
 Role Variables
 --------------
 
 The following variables are defined in vars/main.yml:
 
-| Variable         | Default | Description                                                                    |
-|:----------------:|:-------:|:-------------------------------------------------------------------------------|
-|apache_autostart  | true    |Autostart on server restart?                                                    |
-|apache_restart    | true    |(Re)start on install?                                                           |
-|apache_ssl_enabled| true    |Base SSL enabled?  Only enables modules.  Certificates are on a per-site basis. |
+| Variable   | Required | Description                                |
+|:-----------|:--------:|:-------------------------------------------|
+| repository | true     | Git repository to deploy from.             |
+| reference  | false    | Git reference to use.  Defaults to 'HEAD'. |
+| directory  | true     | Deployment directory to use.               |
+
+Note that if your `repository` utilizes SSH, you must have a key available for connection.
+
+If you're using an SSH agent for connecting to your remote host and the git+SSH repository, you may need to add additional configuration to the Ansible inventory file:
+
+    ansible_ssh_extra_args="-o ForwardAgent=yes"
 
 Dependencies
 ------------
@@ -31,7 +43,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: apache_role }
+         - { role: django_app_deploy_role, respository: "http://github.com/buzzbombnc/djangoapp", directory: "/deploy/dir" }
 
 License
 -------

@@ -1,11 +1,18 @@
 ---
 - name: create deployment structure
-  deploy_helper: path="{{ deploy_directory }}" state=present
+  deploy_helper:
+    path: "{{ directory | mandatory }}"
+    state: present
 
 - name: clone repository
-  git: repo="{{ deploy_repository }}" dest="{{ deploy_helper.new_release_path }}" version="{{ deploy_reference }}"
+  git:
+    repo: "{{ repository | mandatory }}"
+    dest: "{{ deploy_helper.new_release_path }}"
+    version: "{{ reference | default(omit) }}"
 
-- file: path="{{ deploy_helper.new_release_path }}/{{ deploy_helper.unfinished_filename }}" state=touch
+- file:
+    path: "{{ deploy_helper.new_release_path }}/{{ deploy_helper.unfinished_filename }}"
+    state: touch
 
 - name: install Python requirements into virtualenv
   pip:
@@ -32,5 +39,8 @@
       chdir: "{{ deploy_helper.new_release_path }}"
 
 - name: set release to current
-  deploy_helper: path="{{ deploy_directory }}" release="{{ deploy_helper.new_release }}" state=finalize
+  deploy_helper:
+    path: "{{ directory }}"
+    release: "{{ deploy_helper.new_release }}"
+    state: finalize
 
