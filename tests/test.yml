@@ -1,0 +1,4 @@
+---
+- hosts: localhost
+  roles:
+    - { role: django_app_deploy_role, directory: "/tmp/dadrtest", repository: "https://github.com/buzzbombnc/tower_of_perfection.git" }
