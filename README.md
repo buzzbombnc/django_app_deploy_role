@@ -6,7 +6,8 @@ Role that deploys a Django application from Git repository onto a server.
 Tasks:
 1. Deploy repository to server.
 2. Create virtualenv and requirements via `requirements.txt` file.
-3. Validate the Django application by using the `manage.py` script with the `check`, `test`, and `migrate` arguments.
+3. Create an `environment` file with any variables passed in via the `env_vars`.
+4. Validate the Django application by using the `manage.py` script with the `check`, `test`, and `migrate` arguments.
 
 Requirements
 ------------
@@ -24,6 +25,7 @@ The following variables are defined in vars/main.yml:
 | repository | true     | Git repository to deploy from.             |
 | reference  | false    | Git reference to use.  Defaults to 'HEAD'. |
 | directory  | true     | Deployment directory to use.               |
+| env_vars   | false    | A dictionary of key-value env variables.   |
 
 Note that if your `repository` utilizes SSH, you must have a key available for connection.
 
@@ -42,6 +44,9 @@ Example Playbook
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
     - hosts: servers
+      vars:
+        env_vars:
+          whatever: "you need"
       roles:
          - { role: django_app_deploy_role, respository: "http://github.com/buzzbombnc/djangoapp", directory: "/deploy/dir" }
 

@@ -21,6 +21,9 @@
       virtualenv: "{{ deploy_helper.new_release_path }}/env"
       virtualenv_site_packages: yes
 
+- name: build Django environment file
+  template: src=environment.j2 dest="{{ deploy_helper.new_release_path }}/environment" mode=0640
+
 - name: execute Django checks
   # TODO: Fail on warnings.
   command: ./env/bin/python manage.py check --no-color
